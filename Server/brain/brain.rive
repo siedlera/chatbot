@@ -1,0 +1,8 @@
+! version = 2.0
+
++ my name is *
+- <set clientname=<formal>>It's nice to meet you, <get clientname>.
+
++ what is my name
+- You are <bot usertitle>.
+- Your name is <bot usertitle>.

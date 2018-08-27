@@ -1,0 +1,136 @@
+body, html{
+    font-family: 'Nunito';
+    height: 100%;
+    margin: 0;
+
+}
+
+#dummy-container{
+    background-image: url(onlineshop-dummy-immage.jpeg);
+    height: 100%;
+    background-size: cover;
+    overflow: auto;
+  }
+
+h2{
+    font-size: 18px;
+    padding: 10px 20px;
+    color: #a1cbce;
+}
+
+#chat-header{
+  height: 20px;
+  background: grey;
+  color: white;
+  padding: 0px 10px;
+}
+
+#chat-button{
+  height: 100px;
+  background: #a1cbce;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 100px;
+  border-radius: 50px;
+}
+
+#chat-button img{
+  position: absolute;
+width: 60px;
+margin: auto;
+left: 0;
+right: 0;
+top: 0;
+bottom: 0;
+}
+
+#mario-chat{
+  max-width: 370px;
+  border: 1px solid #ddd;
+  box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
+  border-radius: 2px;
+  position: absolute;
+  right: 20px;
+  bottom: 130px;
+  width: 100%;
+}
+
+#chat-window{
+    height: 400px;
+    overflow: auto;
+    background: #f9f9f9;
+    padding: 14px;
+}
+
+#output p{
+    padding: 14px 0px;
+    margin: 0 20px;
+    border-bottom: 1px solid #e9e9e9;
+    color: #555;
+}
+
+#feedback p{
+    color: #aaa;
+    padding: 14px 0px;
+    margin: 0 20px;
+}
+
+#output strong{
+    color: #a1cbce;
+}
+
+label{
+    box-sizing: border-box;
+    display: block;
+    padding: 10px 20px;
+}
+
+input{
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background: #eee;
+    border: 0;
+    display: block;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    font-family: Nunito;
+    font-size: 16px;
+}
+
+button{
+    background: #a1cbce;
+    color: #fff;
+    font-size: 18px;
+    border: 0;
+    padding: 12px 0;
+    width: 100%;
+    border-radius: 0 0 2px 2px;
+}
+.chat-message {
+  width: 100%;
+  margin: 10px 0px 10px 0px;
+  overflow: auto;
+}
+.chat-message .client {
+  background: #c7c7c7;
+  height: 100%;
+  float: right;
+  padding: 5px;
+  border-radius: 10px 0px 10px 10px;
+  max-width: 70%;
+}
+
+.chat-message .bot {
+  background: #a1cbce;
+  height: 100%;
+  float: left;
+  padding: 5px;
+  border-radius: 0px 10px 10px 10px;
+  color: white;
+  max-width: 70%;
+}
+.is-hidden{
+  display: none;
+}
