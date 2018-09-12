@@ -408,8 +408,6 @@ function set_user_var(data){
   })
 }
 
-
-
 function edit_data(data){
   return new Promise(function(resolve){
 
@@ -465,14 +463,18 @@ function set_synonyms( message ){
 
     var triggerResult;
 
-    for(var i in botConfig){
-      for(var z in botConfig[i]){
-        for( var x = 0; x < (synArray.length); x++ ){
-            if(botConfig[i][z].trigger == synArray[x]){
-              triggerResult = synArray[x];
-            } else {
+    for ( var group in botConfig ){
+      for ( var index in botConfig[group] ){
+        //for ( var trigger in botConfig[group][index] ){
+
+            for( var x = 0; x < (synArray.length); x++ ){
+                if(botConfig[group][index].trigger == synArray[x]){
+                  triggerResult = synArray[x];
+                } else {
+                }
             }
-        }
+
+        //}
       }
     }
 
@@ -610,23 +612,72 @@ function send_botConfig_to_dash(socket){
     //botConfig.welcome.trigger = 'ANDI';
 
 
-    console.log(botConfig);
-
     var convs = '! version = 2.0\n';
 
     for (var group in botConfig) {
       if (botConfig.hasOwnProperty(group)) {
 
-        for( var p in botConfig[group]) {
-            var trigger = '+ ' + botConfig[group][p].trigger + '\n';
+        for( var p = 0; p < botConfig[group].length; p++) {
+
+            let triggerList = botConfig[group][p].trigger.join(' [*] ');
+            var trigger = '+ ' + triggerList + '\n';
             convs = convs.concat(trigger);
 
-          for( var z in botConfig[group][p].replies) {
+          for( var z = 0; z < botConfig[group][p].replies.length; z++) {
             var reply = '- ' +  botConfig[group][p].replies[z] + '\n';
             convs = convs.concat(reply);
           }
             convs = convs.concat('\n');
         }
+
+        //NR2
+        for( var p = 0; p < botConfig[group].length; p++) {
+
+            let triggerList = botConfig[group][p].trigger.join(' [*] ');
+            var trigger = '+ * ' + triggerList + '\n';
+            convs = convs.concat(trigger);
+
+          for( var z = 0; z < botConfig[group][p].replies.length; z++) {
+            var reply = '- {@ <star>} ' +  botConfig[group][p].replies[z] + '\n';
+            convs = convs.concat(reply);
+          }
+            convs = convs.concat('\n');
+        }
+
+
+        //NR3
+        for( var p = 0; p < botConfig[group].length; p++) {
+
+            let triggerList = botConfig[group][p].trigger.join(' [*] ');
+            var trigger = '+ ' + triggerList + ' *' + '\n';
+            convs = convs.concat(trigger);
+
+          for( var z = 0; z < botConfig[group][p].replies.length; z++) {
+            var reply = '- ' +  botConfig[group][p].replies[z] + ' {@ <star>}' + '\n';
+            convs = convs.concat(reply);
+          }
+            convs = convs.concat('\n');
+        }
+
+
+        //NR4
+        for( var p = 0; p < botConfig[group].length; p++) {
+
+            let triggerList = botConfig[group][p].trigger.join(' [*] ');
+            var trigger = '+ * ' + triggerList + ' *' + '\n';
+            convs = convs.concat(trigger);
+
+          for( var z = 0; z < botConfig[group][p].replies.length; z++) {
+            var reply = '- {@ <star1>} ' +  botConfig[group][p].replies[z] + ' {@ <star2>}' + '\n';
+            convs = convs.concat(reply);
+          }
+            convs = convs.concat('\n');
+        }
+
+
+
+
+
       }
     }
 

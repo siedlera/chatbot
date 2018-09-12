@@ -1,18 +1,85 @@
 ! version = 2.0
-+ *
-- Warte bitte kurz, bin gleich bei dir! :)!
++ test1 [*] test2 [*] test3
+- Warte bitte kurz, bin gleich bei dir! :)! test5sda
 - Einen Moment bitte, bin gleich bei dir! :)
-- asdf
-- function (n){return this.indexOf(n)>-1}
+- Hallo
+- testreply1
 
-+ ( [*] danke [*] | [*] dank [*] )
-- Kein Problem! :)
-- Gerne! :)
-- function (n){return this.indexOf(n)>-1}
++ suche [*] sauna
+- Hier findest du unser Saunasortiment!
+- Alle unsere Saunen findest du hier!
 
-+ starten
-- starten test
-- function (n){return this.indexOf(n)>-1}
++ brauche [*] hilfe
+- Wir helfen immer gerne weiter! :)
 
-+ undefined
++ hi
+- Hallo!
+- Hi!
+- Servus!
+
++ download [*] starten
+- Der Download hat gestartet :)
+
++ * test1 [*] test2 [*] test3
+- {@ <star>} Warte bitte kurz, bin gleich bei dir! :)! test5sda
+- {@ <star>} Einen Moment bitte, bin gleich bei dir! :)
+- {@ <star>} Hallo
+- {@ <star>} testreply1
+
++ * suche [*] sauna
+- {@ <star>} Hier findest du unser Saunasortiment!
+- {@ <star>} Alle unsere Saunen findest du hier!
+
++ * brauche [*] hilfe
+- {@ <star>} Wir helfen immer gerne weiter! :)
+
++ * hi
+- {@ <star>} Hallo!
+- {@ <star>} Hi!
+- {@ <star>} Servus!
+
++ * download [*] starten
+- {@ <star>} Der Download hat gestartet :)
+
++ test1 [*] test2 [*] test3 *
+- Warte bitte kurz, bin gleich bei dir! :)! test5sda {@ <star>}
+- Einen Moment bitte, bin gleich bei dir! :) {@ <star>}
+- Hallo {@ <star>}
+- testreply1 {@ <star>}
+
++ suche [*] sauna *
+- Hier findest du unser Saunasortiment! {@ <star>}
+- Alle unsere Saunen findest du hier! {@ <star>}
+
++ brauche [*] hilfe *
+- Wir helfen immer gerne weiter! :) {@ <star>}
+
++ hi *
+- Hallo! {@ <star>}
+- Hi! {@ <star>}
+- Servus! {@ <star>}
+
++ download [*] starten *
+- Der Download hat gestartet :) {@ <star>}
+
++ * test1 [*] test2 [*] test3 *
+- {@ <star1>} Warte bitte kurz, bin gleich bei dir! :)! test5sda {@ <star2>}
+- {@ <star1>} Einen Moment bitte, bin gleich bei dir! :) {@ <star2>}
+- {@ <star1>} Hallo {@ <star2>}
+- {@ <star1>} testreply1 {@ <star2>}
+
++ * suche [*] sauna *
+- {@ <star1>} Hier findest du unser Saunasortiment! {@ <star2>}
+- {@ <star1>} Alle unsere Saunen findest du hier! {@ <star2>}
+
++ * brauche [*] hilfe *
+- {@ <star1>} Wir helfen immer gerne weiter! :) {@ <star2>}
+
++ * hi *
+- {@ <star1>} Hallo! {@ <star2>}
+- {@ <star1>} Hi! {@ <star2>}
+- {@ <star1>} Servus! {@ <star2>}
+
++ * download [*] starten *
+- {@ <star1>} Der Download hat gestartet :) {@ <star2>}
 

@@ -231,7 +231,7 @@ class ChatWindow {
     $('<div id="sub-menu">zurück</div><div class="chat-output">').appendTo('.chat-messenger');
     $('<input class="message" id="message-'+this.channelID+'" type="text" placeholder="Nachricht">').appendTo('.chat-messenger');
     $('<button class="send" id="send-'+this.channelID+'">Senden</button>').appendTo('.chat-messenger');
-      for( let z in this.chatHistory ){
+      for( let z = (this.chatHistory.length-50); z < this.chatHistory.length; z++ ){
         MessageOutput(this.channelID, this.chatHistory[z].name, this.chatHistory[z].message, this.chatHistory[z].senderType);
       }
       let messageBody = document.querySelector('.chat-output');
@@ -348,17 +348,25 @@ function send_bot_status(channelID){
     $('#tri-res-container').removeClass('is-hidden').addClass('is-shown');
     $('#customizer-header-menu').removeClass('is-hidden').addClass('is-shown');
 
-    $('.customizer-menu').empty();
+    $('.customizer-list').empty();
+
     for (var group in botConfig) {
       if (botConfig.hasOwnProperty(group)) {
           new TriResGroup(group);
       }
     }
+    $('.customizer-menu').append('<div id="add--trires-group">+Gruppe hinzufügen</div>');
+    $('#add--trires-group').on('click', function(){
+
+      new TriResGroup('Gruppe-' + Math.floor(Math.random() * 100));
+    });
   })
 
-    $('#save-customizer').on('click', function(){
-      send_botConfig_to_server();
-    });
+  $('#save-customizer').on('click', function(){
+    send_botConfig_to_server();
+  });
+
+
 
 
   /************** CLASSES **************/
@@ -369,14 +377,15 @@ function send_bot_status(channelID){
     constructor(groupName){
       this.groupName = groupName;
       this.groupID = 'group-'+groupName;
-      this.renderGroup();
+      this.renderItem();
       this.renderEvent();
+      this.push_newGroup();
+
     }
 
-    renderGroup(){
-      $('<div class="trires-group" id="'+this.groupID+'">'+this.groupName+'</div>').appendTo('.customizer-menu');
+    renderItem(){
+      $('<div class="trires-group" id="'+this.groupID+'">'+this.groupName+'</div>').appendTo('.customizer-list');
     }
-
 
     renderEvent(){
       $('#group-'+this.groupName).on('click', function(){
@@ -392,18 +401,23 @@ function send_bot_status(channelID){
       }.bind(this))
     }
 
+    push_newGroup(){
+      if(! botConfig[this.groupName]){
+          botConfig[this.groupName] = [];
+        }
+    }
   }
 
 
   class TriResItem {
 
-    constructor(groupName, existingItem, parentGroup){
+    constructor(itemName, existingItem, parentItem){
+
       TriResItemCounter++;
 
-      this.groupName = groupName;
-      this.parentGroup = '';
-      this.parentGroup = parentGroup;
-      this.trigger = '';
+      this.itemName = itemName;
+      this.parentItem = parentItem;
+      this.trigger = [''];
       this.replies = [''];
 
       this.existingItem = existingItem;
@@ -411,77 +425,97 @@ function send_bot_status(channelID){
 
       (existingItem.itemID)?this.itemID = existingItem.itemID:this.push_newItem();
 
-      this.renderGroup(this.parentGroup);
-      if(existingItem){
-        this.renderTrigger(this.existingItem.trigger)
+      this.renderItem(this.parentItem);
+
+      new TriResItemInputs(this.existingItem, this.itemID, this.itemName);
+      //this.renderDeleteGroupButton();
+
+    }
+
+    push_newItem(){
+      this.itemID = Math.floor(Math.random() * 1000) + 1;
+      botConfig[this.itemName].push(this);
+    }
+
+    renderItem(parentItem){
+      let newItem = $('<div class="tri-res-item" id="item-'+this.itemID
+      +'"><div class="tri-input"></div><div class="res-input"></div><div class="tri-res-actions"></div></div>');
+        newItem.appendTo('#tri-res-output');
+        this.renderNewItemButton();
+      }
+
+    renderNewItemButton(){
+
+      $('<br><span class="add-item-button" id="test-'+this.itemID+'">+Item</span>').appendTo('#item-'+this.itemID+' .tri-res-actions');
+      $('#test-'+this.itemID).click( function(){
+          new TriResItem(this.itemName,'', this.itemID);
+      }.bind(this));
+    }
+
+    renderDeleteGroupButton(){
+      $('<br><span class="delete-item-button" id="'+this.itemID+'" >-deleteItem</span>').appendTo('#group-'+this.itemID+' .tri-res-actions');
+      $('.delete-item-button#'+this.itemID).click( function(){
+      }.bind(this));
+    }
+
+  }
+
+
+
+  class TriResItemInputs {
+    constructor(existingItem, itemID, itemName){
+
+      this.triggerIndex = 0;
+      this.replyIndex = 0;
+
+      this.existingItem = existingItem;
+      this.itemID = itemID;
+      this.itemName = itemName;
+
+      if(this.existingItem){
         this.loopReplies();
+        this.loopTrigger();
       } else {
         this.renderTrigger()
         this.renderReply();
       };
 
       this.renderAddReply();
-      this.renderNewItemButton();
+      this.renderAddTrigger();
 
       this.update_data();
-      //this.renderDeleteGroupButton();
+
     }
 
-    update_data(){
-      console.log('replyIndex',this.replyIndex);
-
-      let found = botConfig[this.groupName].find(x => x.itemID === this.itemID);
-
-      let triggerInput = $("input#trigger-"+this.itemID);
-      triggerInput.change( function(){
-        found.trigger = triggerInput.val();
-        console.log('botConfig',botConfig);
-      }.bind(this));
-
-      for(let i=0; i<this.replyIndex; i++){
-
-        let replyInput = $("input#reply-"+this.itemID+'-'+i);
-        replyInput.change( function(){
-          found.replies[i] = replyInput.val();
-          console.log('botConfig',botConfig);
-        }.bind(this));
+    loopTrigger(){
+      for(let i in this.existingItem.trigger){
+        this.renderTrigger(this.existingItem.trigger[i]);
       }
     }
-
-    push_newItem(){
-      this.itemID = Math.floor(Math.random() * 1000) + 1;
-      botConfig[this.groupName].push(this);
-    }
-
-    renderGroup(parentGroup){
-      let newGroup = $('<div class="tri-res-item" id="group-'+this.itemID
-      +'"><div class="tri-res-input"></div></div>');
-        newGroup.appendTo('#tri-res-output');
-      }
 
     renderTrigger(triggerValue){
-      $('<input placeholder="Trigger" class="trigger" id="trigger-'+this.itemID
-      +'"></div>').val(triggerValue).appendTo('#group-'+this.itemID+' .tri-res-input');
+      $('<input placeholder="Trigger" class="trigger" id="trigger-'+this.itemID+'-'+this.triggerIndex
+      +'"></div>').val(triggerValue).appendTo('#item-'+this.itemID+' .tri-input');
+      this.triggerIndex++;
     }
 
     loopReplies(){
       for(let i in this.existingItem.replies){
-        this.renderReply(this.existingItem.replies[i]);
+        this.renderReply(this.existingItem.replies[i], i);
       }
     }
 
-    renderReply(replyValue){
-        $('<input placeholder="Reply" id="reply-'+this.itemID+'-'+this.replyIndex
-        +'"></div>').val(replyValue).appendTo('#group-'+this.itemID+' .tri-res-input');
-        this.replyIndex ++;
+    renderReply(replyValue, i){
+      $('<input placeholder="Reply" id="reply-'+this.itemID+'-'+this.replyIndex
+      +'"></div>').val(replyValue).appendTo('#item-'+this.itemID+' .res-input');
+      this.replyIndex++;
     }
 
     renderAddReply(){
-      $('<div class="tri-res-actions"><span class="add-replybutton" id="'
-      +this.itemID+'" >+Reply</span></div>').appendTo('#group-'+this.itemID);
-      $('.add-replybutton#'+this.itemID).click( function(){
+      $('<span class="add-replybutton" id="rep-button-'+this.itemID+'" >+Reply</span>').appendTo('#item-'+this.itemID+' .tri-res-actions');
+      $('#rep-button-'+this.itemID).click( function(){
 
-      let found = botConfig[this.groupName].find(x => x.itemID === this.itemID);
+      let found = botConfig[this.itemName].find(x => x.itemID === this.itemID);
 
         found.replies.push(''); //Wenn AddReply gedrückt wird -> Pushen von lleren String in botConfig
         this.renderReply();
@@ -490,21 +524,46 @@ function send_bot_status(channelID){
       }.bind(this));
     }
 
-    renderNewItemButton(){
-      $('<br><span class="add-item-button" id="test-'+this.itemID+'">+Item</span>').appendTo('#group-'+this.itemID+' .tri-res-actions');
-      $('#test-'+this.itemID).click( function(){
-          new TriResItem(this.groupName,'', this.itemID);
+    renderAddTrigger(){
+      $('<span class="add-replybutton" id="tri-button-'+this.itemID+'" >+Trigger</span>').appendTo('#item-'+this.itemID+' .tri-res-actions');
+      $('#tri-button-'+this.itemID).click( function(){
+        console.log('trigger geklickt');
+        let found = botConfig[this.itemName].find(x => x.itemID === this.itemID);
+        console.log(found);
+        found.trigger.push('');
+        this.renderTrigger();
+        this.update_data();
       }.bind(this));
     }
 
-    renderDeleteGroupButton(){
-      $('<br><span class="delete-group-button" id="'+this.itemID+'" >-deleteGroup</span>').appendTo('#group-'+this.itemID+' .tri-res-actions');
-      $('.delete-group-button#'+this.itemID).click( function(){
-      }.bind(this));
+
+    update_data(){
+
+      let found = botConfig[this.itemName].find(x => x.itemID === this.itemID);
+
+      for(let i in found.trigger){
+
+        console.log(found.trigger);
+
+        let triggerInput = $("#trigger-"+this.itemID+'-'+i);
+        triggerInput.change( function(){
+          found.trigger[i] = triggerInput.val();
+          console.log('botConfigTest',botConfig);
+        }.bind(this));
+      }
+
+      for(let i in found.replies){
+        let replyInput = $("input#reply-"+this.itemID+'-'+i);
+        replyInput.change( function(){
+          found.replies[i] = replyInput.val();
+          console.log('botConfig',botConfig);
+        }.bind(this));
+      }
     }
+
 
   }
-  
+
 
   /**************************** GENERAL CONIFG ****************************/
 
